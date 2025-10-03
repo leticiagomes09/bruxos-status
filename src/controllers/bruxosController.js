@@ -27,8 +27,15 @@ const getBruxosById = (req, res) => {
 
 if(!bruxo) {
      return res.status(404).json({
+            status: 404,
             success: false,
-            message: "“Nenhum bruxo foi encontrado no Beco Diagonal!"
+            message: "“Nenhum bruxo foi encontrado no Beco Diagonal!",
+            error: "WIZARD_NOT_FOUND",
+            sugggestions: [
+                "Verifique se o bruxo está registrado",
+                "Cheque se o nome está correto"
+            ],
+
         });
 }
 
@@ -45,6 +52,16 @@ const createBruxo = (req, res) => {
         return res.status(400).json({
         message: "Feitiço mal executado! Verifique os ingredientes."
         });
+    }
+
+    const nomeExixte = bruxos.find((n) => n.nome.toLowerCase() === nome.toLowerCase());
+
+    if (nomeExixte) {
+        return res.status(409).json({
+            status: 409,
+            success: false,
+            message: "Já existe um bruxo com esse nome!"
+        })
     }
 
     const novoBruxo = {
